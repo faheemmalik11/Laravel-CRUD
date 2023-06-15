@@ -8,8 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class Post extends Model
 {
-    protected $directory = 'images';
+    
     use HasFactory; 
+
     protected $guarded = [];
 
     public function user(){
@@ -20,6 +21,6 @@ class Post extends Model
         if (strpos($value, 'https://') !== FALSE || strpos($value, 'http://') !== FALSE) {
             return $value;
         }
-        return asset('images/posts/' . $value);
+        return asset('storage/' . $value);
     }
 }

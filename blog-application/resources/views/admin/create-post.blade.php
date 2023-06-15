@@ -1,29 +1,25 @@
 <x-master-admin>
 @section('content')
-        <h1 class="h3 mb-4 text-gray-800">Edit Post</h1>
+        <h1 class="h3 mb-4 text-gray-800">Create Post</h1>
 
-        <form method="POST" action="{{route('admin.posts.update',['id'=>$post->id])}}" enctype="multipart/form-data">
+        <form method="POST" action="{{route('admin.posts.store')}}" enctype="multipart/form-data">
             @csrf
             <div class="form-group">
                 <label for="PostTile">Title</label>
-                <input type="text" class="form-control"  name = "title" placeholder="Enter Title" value="{{$post->title}}">
+                <input type="text" class="form-control"  name = "title" aria-describedby="emailHelp" placeholder="Enter Title">
 
             </div>
             <div class="form-group">
                 <label for="PostBody">Content</label>
-                <textarea type="text" class="form-control "  name="content" placeholder="Enter Content" rows="15" cols="50" >{{$post->body}} </textarea> 
+                <textarea type="text" class="form-control "  name="body" placeholder="Enter Content" rows="15" cols="50"   ></textarea>
             </div>
            
             <div class="form-group">
                 <label for="exampleFormControlFile1">Post Image</label>
                 <input type="file" class="form-control-file" name = "post_image" >
-                <br>
-                <div>
-                    <img src="{{$post->post_image}}" width = "500px" >
-                </div>
             </div>
 
-            <button type="submit" class="btn btn-primary">Update</button>
+            <button type="submit" class="btn btn-primary">Submit</button>
         </form>
 
 

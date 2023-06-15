@@ -12,57 +12,54 @@ class PostController extends Controller
         
 
         $posts = auth()->user()->posts()->paginate(5);
-        return view('admin-posts', compact('posts'));
+        return view('admin.posts', compact('posts'));
 
     }
 
   
 
     public function create(){
-        return view('create-post');
+        return view('admin.create-post');
     }
 
-    public function store(Request $request){
+    public function store(){
         
-        $validated = $request->validate([
+        $inputs = request()->validate([
             'title' =>'required|min:3|max:255',
-            'content' =>'required|min:3',
+            'body' =>'required|min:3',
             'post_image' =>'file',
         ]);
 
-        $file = $request->file('post_image');
-        $name = $file->getClientOriginalName();
-        $file->move('images/posts', $name);
-        $user = auth()->user();
-        $post = new Post(['title'=> $request->title , 'body'=>$request->content, 'post_image'=>$name]);
-        $user->posts()->save($post);
-        $request->session()->flash('message-post-created', 'Post created successfully!');
+        $inputs['post_image'] = request('post_image')->store('images');
+        auth()->user()->posts()->create($inputs);
+  
+        request()->session()->flash('message-post-created', 'Post created successfully!');
         return redirect()->route('admin.posts.index');
     }
     
     public function show($id){
             $post = Post::find($id);
-            return view('edit-post', compact('post'));
+            return view('admin.edit-post', compact('post'));
         }
 
-    public function update($id, Request $request){
+    public function update($id){
        
         
         $post = Post::find($id);
+
         $this->authorize('update', $post);
-        $validated = $request->validate([
+        $inputs = request()->validate([
             'title' =>'required|min:3|max:255',
-            'content' =>'required|min:3',
+            'body' =>'required|min:3',
             'post_image' =>'file',
         ]);
 
-        $file = $request->file('post_image');
-        $name = $file->getClientOriginalName();
-        $file->move('images/posts', $name);
-        $user = auth()->user();
+        $inputs['post_image'] = request('post_image')->store('images');
+        $post->update($inputs);
+      
         
-        Post::where('id',$post->id)->update(['title'=> $request->title , 'body'=>$request->content, 'post_image'=>$name, 'user_id'=>$user->id]);
-        $request->session()->flash('message-post-updated', 'Post updated successfully!');
+        
+        request()->session()->flash('message-post-updated', 'Post updated successfully!');
         return redirect()->route('admin.posts.index');
     }
 
